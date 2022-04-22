@@ -7,9 +7,7 @@ import os
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "-p", "--filepath", type=pathlib.Path, help="The file to be encrypted"
-)
+parser.add_argument("filepath", type=pathlib.Path, help="The file to be encrypted")
 args = parser.parse_args()
 
 key = os.urandom(32)
