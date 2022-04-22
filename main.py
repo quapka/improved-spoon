@@ -5,6 +5,8 @@ import pathlib
 import os
 
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("filepath", type=pathlib.Path, help="The file to be encrypted")
@@ -16,5 +18,10 @@ cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
 
 
 with open(args.filepath, "rb") as handle:
-    encryptor = cipher.encryptor()
-    ct = encryptor.update(handle.read()) + encryptor.finalize()
+    data = handle.read()
+
+padder = padding.PKCS7(128).padder()
+padded_data = padder.update(data) + padder.finalize()
+
+encryptor = cipher.encryptor()
+ct = encryptor.update(padded_data) + encryptor.finalize()
